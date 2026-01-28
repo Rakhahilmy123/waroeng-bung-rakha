@@ -29,28 +29,7 @@
                     </div>
 
                     <!-- Auth Links -->
-                    @if (Route::has('login'))
-                        <div class="flex items-center gap-3">
-                            @auth
-                                <a href="{{ url('/dashboard') }}" 
-                                   class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
-                                    Dashboard
-                                </a>
-                            @else
-                                <a href="{{ route('login') }}" 
-                                   class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                                    Log in
-                                </a>
-                                
-                                @if (Route::has('register'))
-                                    <a href="{{ route('register') }}" 
-                                       class="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 shadow-md hover:shadow-lg">
-                                        Register
-                                    </a>
-                                @endif
-                            @endauth
-                        </div>
-                    @endif
+
                 </div>
             </div>
         </nav>

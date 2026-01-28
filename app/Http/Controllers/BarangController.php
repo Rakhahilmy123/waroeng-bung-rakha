@@ -22,14 +22,26 @@ class BarangController extends Controller
     {
         $request->validate([
             'nama_barang' => 'required',
-            'harga' => 'required|numeric',
-            'stok' => 'required|numeric',
+            'harga' => 'required|numeric|min:0',
+            'stok' => 'required|numeric|min:0',
             'diskon' => 'nullable|numeric|min:0|max:100',
         ]);
 
-        Barang::create($request->all());
+        // Hitung harga_diskon
+        $harga = $request->harga;
+        $diskon = $request->diskon ?? 0;
+        $hargaDiskon = $harga - ($harga * $diskon / 100);
 
-        return redirect()->route('barang.index')->with('success', 'Barang berhasil ditambahkan');
+        Barang::create([
+            'nama_barang' => $request->nama_barang,
+            'harga' => $harga,
+            'stok' => $request->stok,
+            'diskon' => $diskon,
+            'harga_diskon' => $hargaDiskon,
+        ]);
+
+        return redirect()->route('barang.index')
+            ->with('success', 'Barang berhasil ditambahkan');
     }
 
     public function edit(Barang $barang)
@@ -39,14 +51,34 @@ class BarangController extends Controller
 
     public function update(Request $request, Barang $barang)
     {
-        $barang->update($request->all());
+        $request->validate([
+            'nama_barang' => 'required',
+            'harga' => 'required|numeric|min:0',
+            'stok' => 'required|numeric|min:0',
+            'diskon' => 'nullable|numeric|min:0|max:100',
+        ]);
 
-        return redirect()->route('barang.index')->with('success', 'Barang berhasil diupdate');
+        // Hitung harga_diskon
+        $harga = $request->harga;
+        $diskon = $request->diskon ?? 0;
+        $hargaDiskon = $harga - ($harga * $diskon / 100);
+
+        $barang->update([
+            'nama_barang' => $request->nama_barang,
+            'harga' => $harga,
+            'stok' => $request->stok,
+            'diskon' => $diskon,
+            'harga_diskon' => $hargaDiskon,
+        ]);
+
+        return redirect()->route('barang.index')
+            ->with('success', 'Barang berhasil diupdate');
     }
 
     public function destroy(Barang $barang)
     {
         $barang->delete();
-        return redirect()->route('barang.index')->with('success', 'Barang berhasil dihapus');
+        return redirect()->route('barang.index')
+            ->with('success', 'Barang berhasil dihapus');
     }
 }
