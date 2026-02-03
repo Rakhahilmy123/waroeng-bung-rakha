@@ -33,7 +33,7 @@
                 @csrf
 
                 <!-- Cart Summary Card -->
-                <div class="bg-blue-500  rounded-2xl p-6 mb-6 shadow-lg text-white">
+                <div class="bg-blue-500 rounded-2xl p-6 mb-6 shadow-lg text-white">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-blue-100 text-sm mb-1">Total Item Dipilih</p>
@@ -64,7 +64,7 @@
                     <!-- Products Grid -->
                     <div class="p-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            @foreach ($barangs as $index => $barang)
+                            @foreach ($barangs as $barang)
                             <div class="relative group border-2 rounded-xl p-4 transition-all duration-200"
                                  :class="selectedItems.includes({{ $barang->id }}) ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : 'border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600'">
                                 
@@ -72,9 +72,9 @@
                                     <!-- Checkbox -->
                                     <div class="flex items-center h-5 mt-1">
                                         <input type="checkbox" 
-                                               name="barang_id[]" 
+                                               :id="'barang_{{ $barang->id }}'"
                                                value="{{ $barang->id }}"
-                                               @change="toggleItem({{ $barang->id }}, {{ $barang->harga_diskon ?? $barang->harga }})"
+                                               @change="toggleItem({{ $barang->id }})"
                                                class="w-5 h-5 text-blue-600 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer">
                                     </div>
 
@@ -110,13 +110,13 @@
                                         </div>
 
                                         <!-- Quantity Input -->
-                                        <div class="mt-3">
+                                        <div class="mt-3" x-show="selectedItems.includes({{ $barang->id }})">
                                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                                 Jumlah
                                             </label>
                                             <div class="flex items-center gap-3">
                                                 <button type="button"
-                                                        @click="decreaseQty({{ $index }})"
+                                                        @click="decreaseQty({{ $barang->id }})"
                                                         class="w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors flex items-center justify-center">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
@@ -124,16 +124,14 @@
                                                 </button>
                                                 
                                                 <input type="number" 
-                                                       name="qty[]"
-                                                       x-model="quantities[{{ $index }}]"
-                                                       @input="updateTotal({{ $barang->id }}, {{ $barang->harga_diskon ?? $barang->harga }})"
-                                                       min="0"
+                                                       :name="'qty[' + {{ $barang->id }} + ']'"
+                                                       x-model="quantities[{{ $barang->id }}]"
+                                                       min="1"
                                                        max="{{ $barang->stok }}"
-                                                       placeholder="0"
                                                        class="w-20 text-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                                                 
                                                 <button type="button"
-                                                        @click="increaseQty({{ $index }}, {{ $barang->stok }})"
+                                                        @click="increaseQty({{ $barang->id }}, {{ $barang->stok }})"
                                                         class="w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors flex items-center justify-center">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -147,6 +145,11 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- Hidden inputs untuk submit -->
+                                <template x-if="selectedItems.includes({{ $barang->id }})">
+                                    <input type="hidden" name="barang_id[]" :value="{{ $barang->id }}">
+                                </template>
 
                                 <!-- Selected Indicator -->
                                 <div x-show="selectedItems.includes({{ $barang->id }})" 
@@ -188,7 +191,7 @@
                     <button type="submit" 
                             :disabled="selectedCount === 0"
                             :class="selectedCount === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:from-blue-600 hover:to-purple-700 hover:shadow-lg'"
-                            class="inline-flex items-center gap-2 px-8 py-3 bg-blue-500  text-white rounded-lg transition-all duration-200 shadow-md font-medium">
+                            class="inline-flex items-center gap-2 px-8 py-3 bg-blue-500 text-white rounded-lg transition-all duration-200 shadow-md font-medium">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
@@ -205,97 +208,48 @@
     </div>
 
     <script>
-        function transaksiForm() {
-            return {
-                selectedItems: [],
-                quantities: Array({{ $barangs->count() }}).fill(1),
-                totalAmount: 0,
-                
-                get selectedCount() {
-                    return this.selectedItems.length;
-                },
-                
-                validateForm(event) {
-                    if (this.selectedCount === 0) {
-                        event.preventDefault();
-                        alert('Pilih minimal 1 barang!');
-                        return false;
-                    }
-                    
-                    // Validasi qty untuk setiap item yang dipilih
-                    const allCards = document.querySelectorAll('.relative.group');
-                    let hasError = false;
-                    
-                    allCards.forEach((card) => {
-                        const checkbox = card.querySelector('input[name="barang_id[]"]');
-                        if (checkbox && checkbox.checked) {
-                            const qtyInput = card.querySelector('input[name="qty[]"]');
-                            const qty = parseInt(qtyInput.value) || 0;
-                            
-                            if (qty < 1) {
-                                hasError = true;
-                                alert('Jumlah barang harus minimal 1!');
-                                event.preventDefault();
-                                return false;
-                            }
-                        }
-                    });
-                    
-                    return !hasError;
-                },
-                
-                toggleItem(id, price) {
-                    const index = this.selectedItems.indexOf(id);
-                    if (index > -1) {
-                        this.selectedItems.splice(index, 1);
-                    } else {
-                        this.selectedItems.push(id);
-                    }
-                    this.calculateTotal();
-                },
-                
-                updateTotal(id, price) {
-                    this.calculateTotal();
-                },
-                
-                calculateTotal() {
-                    let total = 0;
-                    const allCards = document.querySelectorAll('.relative.group');
-                    
-                    allCards.forEach((card, index) => {
-                        const checkbox = card.querySelector('input[name="barang_id[]"]');
-                        if (checkbox && checkbox.checked) {
-                            const qtyInput = card.querySelector('input[name="qty[]"]');
-                            const qty = parseInt(qtyInput.value) || 1;
-                            const priceElement = card.querySelector('.text-blue-600');
-                            const priceText = priceElement.textContent.replace(/[^0-9]/g, '');
-                            const price = parseInt(priceText);
-                            
-                            total += price * qty;
-                        }
-                    });
-                    
-                    this.totalAmount = total;
-                },
-                
-                increaseQty(index, max) {
-                    if (this.quantities[index] < max) {
-                        this.quantities[index]++;
-                        this.calculateTotal();
-                    }
-                },
-                
-                decreaseQty(index) {
-                    if (this.quantities[index] > 1) {
-                        this.quantities[index]--;
-                        this.calculateTotal();
-                    }
-                },
-                
-                formatCurrency(amount) {
-                    return 'Rp ' + amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    function transaksiForm() {
+        return {
+            selectedItems: [],
+            quantities: {},
+
+            get selectedCount() {
+                return this.selectedItems.length;
+            },
+
+            toggleItem(id) {
+                if (this.selectedItems.includes(id)) {
+                    this.selectedItems = this.selectedItems.filter(i => i !== id);
+                    delete this.quantities[id];
+                } else {
+                    this.selectedItems.push(id);
+                    this.quantities[id] = 1;
                 }
+            },
+
+            increaseQty(id, max) {
+                if (!this.quantities[id]) this.quantities[id] = 1;
+                if (this.quantities[id] < max) {
+                    this.quantities[id]++;
+                }
+            },
+
+            decreaseQty(id) {
+                if (!this.quantities[id]) this.quantities[id] = 1;
+                if (this.quantities[id] > 1) {
+                    this.quantities[id]--;
+                }
+            },
+
+            validateForm(e) {
+                if (this.selectedItems.length === 0) {
+                    e.preventDefault();
+                    alert('Pilih minimal 1 barang');
+                    return false;
+                }
+                return true;
             }
         }
+    }
     </script>
 </x-app-layout>

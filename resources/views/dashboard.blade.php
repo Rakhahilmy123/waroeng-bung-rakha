@@ -46,78 +46,146 @@
                 </div>
             </div>
 
-            <!-- Statistics Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                
-            @if (in_array(auth()->user()->role, ['admin', 'superadmin']))
-                                <!-- Total Barang -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 dark:border-gray-700">
-                    <div class="flex items-start justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                                Total Barang
-                            </p>
-                            <h3 class="text-3xl font-bold text-gray-900 dark:text-white">
-                                {{ number_format($totalBarang, 0, ',', '.') }}
-                            </h3>
-                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">
-                                Item dalam inventori
-                            </p>
-                        </div>
-                        <div class="w-12 h-12 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
-                            <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                            </svg>
-                        </div>
-                    </div>
+<!-- Statistics Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    
+    @if (in_array(auth()->user()->role, ['admin', 'superadmin']))
+        <!-- Total Barang -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 dark:border-gray-700">
+            <div class="flex items-start justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                        Total Barang
+                    </p>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white">
+                        {{ number_format($totalBarang, 0, ',', '.') }}
+                    </h3>
+                    <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">
+                        Item dalam inventori
+                    </p>
                 </div>
-
-                <!-- Total Transaksi -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 dark:border-gray-700">
-                    <div class="flex items-start justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                                Total Transaksi
-                            </p>
-                            <h3 class="text-3xl font-bold text-gray-900 dark:text-white">
-                                {{ number_format($totalTransaksi, 0, ',', '.') }}
-                            </h3>
-                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">
-                                Transaksi tercatat
-                            </p>
-                        </div>
-                        <div class="w-12 h-12 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
-                            <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                            </svg>
-                        </div>
-                    </div>
+                <div class="w-12 h-12 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
                 </div>
-
-                <!-- Total Omzet -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 dark:border-gray-700">
-                    <div class="flex items-start justify-between">
-                        <div>
-                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                                Total Omzet
-                            </p>
-                            <h3 class="text-3xl font-bold text-gray-900 dark:text-white">
-                                Rp {{ number_format($totalOmzet, 0, ',', '.') }}
-                            </h3>
-                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">
-                                Pendapatan keseluruhan
-                            </p>
-                        </div>
-                        <div class="w-12 h-12 rounded-lg bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center">
-                            <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            @endif
-
             </div>
+        </div>
+
+        <!-- Total Transaksi (Semua) -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 dark:border-gray-700">
+            <div class="flex items-start justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                        Total Transaksi
+                    </p>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white">
+                        {{ number_format($totalTransaksi, 0, ',', '.') }}
+                    </h3>
+                    <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">
+                        Semua transaksi
+                    </p>
+                </div>
+                <div class="w-12 h-12 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Omzet -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 dark:border-gray-700">
+            <div class="flex items-start justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                        Total Omzet
+                    </p>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white">
+                        Rp {{ number_format($totalOmzet, 0, ',', '.') }}
+                    </h3>
+                    <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">
+                        Pendapatan keseluruhan
+                    </p>
+                </div>
+                <div class="w-12 h-12 rounded-lg bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    @if (auth()->user()->role === 'operator')
+        <!-- Transaksi Hari Ini -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 dark:border-gray-700">
+            <div class="flex items-start justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                        Transaksi Hari Ini
+                    </p>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white">
+                        {{ number_format($transaksiHariIni ?? 0, 0, ',', '.') }}
+                    </h3>
+                    <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">
+                        {{ now()->format('d F Y') }}
+                    </p>
+                </div>
+                <div class="w-12 h-12 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transaksi Bulan Ini -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 dark:border-gray-700">
+            <div class="flex items-start justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                        Transaksi Bulan Ini
+                    </p>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white">
+                        {{ number_format($transaksiBulanIni ?? 0, 0, ',', '.') }}
+                    </h3>
+                    <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">
+                        {{ now()->format('F Y') }}
+                    </p>
+                </div>
+                <div class="w-12 h-12 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Omzet Hari Ini -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 dark:border-gray-700">
+            <div class="flex items-start justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                        Omzet Hari Ini
+                    </p>
+                    <h3 class="text-3xl font-bold text-gray-900 dark:text-white">
+                        Rp {{ number_format($omzetHariIni ?? 0, 0, ',', '.') }}
+                    </h3>
+                    <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">
+                        Pendapatan hari ini
+                    </p>
+                </div>
+                <div class="w-12 h-12 rounded-lg bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    @endif
+
+</div>
 
             <!-- Quick Actions -->
             <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
