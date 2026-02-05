@@ -73,10 +73,22 @@ Route::middleware(['auth', 'role:operator,admin,superadmin'])->group(function ()
     Route::get('/transaksi/{id}', [TransaksiController::class, 'show'])->name('transaksi.show');
 });
 
-// ✅ USER MANAGEMENT - untuk superadmin
 Route::middleware(['auth', 'role:superadmin'])->group(function () {
+
+    // 🔥 ROUTE KHUSUS HARUS DI ATAS
+    Route::get('/users/pending', [UserController::class, 'pending'])
+        ->name('users.pending');
+
+    Route::post('/users/{user}/approve', [UserController::class, 'approve'])
+        ->name('users.approve');
+
+    Route::post('/users/{user}/reject', [UserController::class, 'reject'])
+        ->name('users.reject');
+
+    // 🔥 RESOURCE PALING BAWAH
     Route::resource('users', UserController::class);
 });
+
 
 
 require __DIR__.'/auth.php';

@@ -40,11 +40,13 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'operator'
+            'role' => 'operator',
+            'is_approved' => false // ✅ OPERATOR BELUM DIAPPROVE
         ]);
 
         event(new Registered($user));
 
-        return redirect()->route('login')->with('success', 'Register berhasil, silahkan login');
+        // ✅ JANGAN AUTO LOGIN, redirect ke login dengan pesan
+        return redirect()->route('login')->with('info', 'Registrasi berhasil! Akun Anda akan segera diaktifkan oleh admin.');
     }
 }
