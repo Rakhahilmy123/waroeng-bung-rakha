@@ -54,14 +54,26 @@ Route::middleware(['auth', 'role:operator'])->group(function () {
         return 'Halaman operator ';
     });
 });
+
+// ✅ BARANG - untuk admin dan superadmin
 Route::middleware(['auth', 'role:admin,superadmin'])->group(function () {
     Route::resource('barang', BarangController::class);
 }); 
+
+// ✅ TRANSAKSI - Khusus untuk OPERATOR (buat transaksi)
 Route::middleware(['auth', 'role:operator'])->group(function () {
     Route::get('/transaksi/create', [TransaksiController::class, 'create'])->name('transaksi.create');
     Route::post('/transaksi/preview', [TransaksiController::class, 'preview'])->name('transaksi.preview');
     Route::post('/transaksi', [TransaksiController::class, 'store'])->name('transaksi.store');
 });
+
+// ✅ RIWAYAT TRANSAKSI - untuk SEMUA ROLE (operator, admin, superadmin)
+Route::middleware(['auth', 'role:operator,admin,superadmin'])->group(function () {
+    Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
+    Route::get('/transaksi/{id}', [TransaksiController::class, 'show'])->name('transaksi.show');
+});
+
+// ✅ USER MANAGEMENT - untuk superadmin
 Route::middleware(['auth', 'role:superadmin'])->group(function () {
     Route::resource('users', UserController::class);
 });

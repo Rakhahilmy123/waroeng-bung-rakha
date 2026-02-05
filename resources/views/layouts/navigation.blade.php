@@ -43,17 +43,31 @@
                     @if (auth()->user()->role === 'operator')
                         <a href="{{ route('transaksi.create') }}" 
                         class="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200
-                                {{ request()->routeIs('transaksi.*') 
+                                {{ request()->routeIs('transaksi.create') || request()->routeIs('transaksi.preview') || request()->routeIs('transaksi.store')
                                     ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30' 
                                     : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800/50' }}">
                             <span class="flex items-center gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                                 </svg>
-                                Transaksi
+                                Buat Transaksi
                             </span>
                         </a>
                     @endif
+
+                    {{-- Menu Riwayat Transaksi untuk Semua Role --}}
+                    <a href="{{ route('transaksi.index') }}" 
+                       class="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200
+                              {{ request()->routeIs('transaksi.index') || request()->routeIs('transaksi.show')
+                                  ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30' 
+                                  : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800/50' }}">
+                        <span class="flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                            Riwayat Transaksi
+                        </span>
+                    </a>
 
                     @if (auth()->user()->role === 'superadmin')
                         <a href="{{ route('users.index') }}" 
@@ -171,13 +185,38 @@
             @if (auth()->user()->role === 'operator')
                 <a href="{{ route('transaksi.create') }}" 
                 class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all
-                        {{ request()->routeIs('transaksi.*') 
+                        {{ request()->routeIs('transaksi.create') || request()->routeIs('transaksi.preview') || request()->routeIs('transaksi.store')
                             ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30' 
                             : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
-                    Transaksi
+                    Buat Transaksi
+                </a>
+            @endif
+
+            {{-- Menu Riwayat Transaksi Mobile --}}
+            <a href="{{ route('transaksi.index') }}" 
+            class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all
+                    {{ request()->routeIs('transaksi.index') || request()->routeIs('transaksi.show')
+                        ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30' 
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50' }}">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                Riwayat Transaksi
+            </a>
+
+            @if (auth()->user()->role === 'superadmin')
+                <a href="{{ route('users.index') }}" 
+                class="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all
+                        {{ request()->routeIs('users.*') 
+                            ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30' 
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50' }}">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    Manajemen User
                 </a>
             @endif
         </div>

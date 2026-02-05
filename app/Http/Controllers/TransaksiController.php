@@ -48,10 +48,22 @@ class TransaksiController extends Controller
 
         $operators = [];
         if ($user->role === 'superadmin') {
-            $operator = User::where('role', 'operator')->get();
+            $operators = User::where('role', 'operator')->get();
         }
 
         return view('transaksi.index', compact('transaksis', 'operators'));
+    }
+
+    public function show($id) {
+        $user = Auth::user();
+
+        $transaksi = Transaksi::with(['details.barang', 'user'])->findOrFail($id);
+
+        if ($user->role === 'operator' && $transaksi->user_id !== $user->id) {
+            abort(403, 'Anda tidak punya akses ke transaksi ini');
+
+        }
+        return view('transaksi.show', compact('transaksi'));
     }
 
     public function create()
