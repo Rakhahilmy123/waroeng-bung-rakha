@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaksi extends Model
 {
-    protected $fillable = ['user_id', 'total_harga'];
+    protected $fillable = ['user_id', 'total_harga', 'diskon'];
 
     public function details()
     {

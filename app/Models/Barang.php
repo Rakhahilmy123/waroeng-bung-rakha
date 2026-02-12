@@ -11,11 +11,17 @@ class Barang extends Model
         'nama_barang',
         'harga',
         'stok',
-        'diskon'
+        'diskon',
+        'kategori_id',
     ];
 
     public function getHargaDiskonAttribute()
     {
         return $this->harga - ($this->harga * $this->diskon / 100);
+    }
+
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class);
     }
 }

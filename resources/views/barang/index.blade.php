@@ -1,17 +1,36 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
-                Data Barang
-            </h2>
-            <a href="{{ route('barang.create') }}" 
-               class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg font-medium">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                </svg>
-                Tambah Barang
-            </a>
-        </div>
+<div class="flex items-center justify-between">
+    <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
+        Data Barang
+    </h2>
+
+    <div class="flex items-center gap-3">
+        
+        {{-- Tombol Kelola Kategori --}}
+        @if(in_array(auth()->user()->role, ['admin','superadmin']))
+        <a href="{{ route('kategori.index') }}" 
+           class="flex items-center gap-2 px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-all duration-200 shadow-md hover:shadow-lg font-medium">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+            </svg>
+            Kelola Kategori
+        </a>
+        @endif
+
+        {{-- Tombol Tambah Barang --}}
+        <a href="{{ route('barang.create') }}" 
+           class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-200 shadow-md hover:shadow-lg font-medium">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Tambah Barang
+        </a>
+
+    </div>
+</div>
+
     </x-slot>
 
     <div class="py-12">

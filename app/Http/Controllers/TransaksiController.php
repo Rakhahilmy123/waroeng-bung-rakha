@@ -6,6 +6,8 @@ use App\Models\Barang;
 use App\Models\Transaksi;
 use App\Models\TransaksiDetail;
 use App\Models\User;
+use App\Models\Kategori;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -66,10 +68,19 @@ class TransaksiController extends Controller
         return view('transaksi.show', compact('transaksi'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        $barangs = Barang::all();
-        return view('transaksi.create', compact('barangs'));
+        $kategoris = Kategori::all();
+
+        $query = Barang::query();
+
+        if ($request->kategori_id) {
+            $query->where('kategori_id', $request->kategori_id);
+        }
+
+        $barangs = $query->get();
+
+        return view('transaksi.create', compact('barangs', 'kategoris'));
     }
 
     public function preview(Request $request)
@@ -91,7 +102,7 @@ class TransaksiController extends Controller
                 return back()->withErrors('Jumlah minimal 1');
             }
 
-            $hargaAsli = $barang->harga;
+            $hargaAsli = $barang->harga;    
 
             // ✅ ATURAN DISKON > 5
             $diskon = 0;
@@ -115,7 +126,40 @@ class TransaksiController extends Controller
             $total += $subtotal;
         }
 
-        return view('transaksi.preview', compact('items', 'total'));
+        // ✅ DISKON BERDASARKAN TOTAL
+$diskonTotal = 0;
+
+if ($total >= 100000) {
+    $diskonTotal = 10;
+} elseif ($total >= 50000) {
+    $diskonTotal = 5;
+}
+
+// ✅ DISKON WAKTU
+$diskonWaktu = 0;
+$now = Carbon::now();
+
+if ($now->isWeekend()) {
+    $diskonWaktu = 5;
+}
+
+if ($now->hour >= 18 && $now->hour <= 21) {
+    $diskonWaktu = max($diskonWaktu, 5);
+}
+
+$totalDiskon = min($diskonTotal + $diskonWaktu, 20);
+
+$potongan = $total * $totalDiskon / 100;
+$totalAkhir = $total - $potongan;
+
+
+    return view('transaksi.preview', compact(
+        'items',
+        'total',
+        'totalDiskon',
+        'potongan',
+        'totalAkhir'
+    ));
     }
 
     public function store(Request $request)
@@ -131,6 +175,7 @@ class TransaksiController extends Controller
             $transaksi = Transaksi::create([
                 'user_id' => Auth::id(),
                 'total_harga' => 0,
+                'diskon' => 0,
             ]);
 
             foreach ($request->barang_id as $barangId) {
@@ -166,7 +211,31 @@ class TransaksiController extends Controller
                 $total += $subtotal;
             }
 
-            $transaksi->update(['total_harga' => $total]);
+            $diskonTotal = 0;
+            if ($total >= 100000) {
+                $diskonTotal = 10;
+            } elseif ($total >= 50000) {
+                $diskonTotal = 5;
+            }
+
+            $diskonwaktu = 0;
+            $now = Carbon::now();
+
+            if ($now->isWeekend()) {
+                $diskonwaktu = 5;
+            } 
+            
+            if ($now->hour >= 18 && $now->hour <= 21) {
+                $diskonwaktu = max($diskonwaktu, 5);
+            }
+
+            $totalDiskon = $diskonTotal + $diskonwaktu;
+
+            $totalDiskon = min($totalDiskon, 20);
+            $potongan = $total * $totalDiskon / 100;
+            $totalAkhir = $total - $potongan;
+
+            $transaksi->update(['diskon' => $totalDiskon, 'total_harga' => $totalAkhir]);
         });
 
         return redirect()

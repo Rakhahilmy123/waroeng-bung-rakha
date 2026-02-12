@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Barang;
 use Illuminate\Http\Request;
+use App\Models\Kategori;
 
 class BarangController extends Controller
 {
@@ -15,7 +16,8 @@ class BarangController extends Controller
 
     public function create()
     {
-        return view('barang.create');
+        $kategoris = Kategori::all();
+        return view('barang.create', compact('kategoris'));
     }
 
     public function store(Request $request)
@@ -25,6 +27,7 @@ class BarangController extends Controller
             'harga' => 'required|numeric|min:0',
             'stok' => 'required|numeric|min:0',
             'diskon' => 'nullable|numeric|min:0|max:100',
+            'kategori_id' => 'nullable|exists:kategoris,id',
         ]);
 
         // Hitung harga_diskon
@@ -37,7 +40,7 @@ class BarangController extends Controller
             'harga' => $harga,
             'stok' => $request->stok,
             'diskon' => $diskon,
-            'harga_diskon' => $hargaDiskon,
+            'kategori_id' => $request->kategori_id,
         ]);
 
         return redirect()->route('barang.index')
@@ -46,7 +49,8 @@ class BarangController extends Controller
 
     public function edit(Barang $barang)
     {
-        return view('barang.edit', compact('barang'));
+        $kategoris = Kategori::all();
+        return view('barang.edit', compact('barang', 'kategoris'));
     }
 
     public function update(Request $request, Barang $barang)
@@ -56,6 +60,7 @@ class BarangController extends Controller
             'harga' => 'required|numeric|min:0',
             'stok' => 'required|numeric|min:0',
             'diskon' => 'nullable|numeric|min:0|max:100',
+            'kategori_id' => 'nullable|exists:kategoris,id',
         ]);
 
         // Hitung harga_diskon
@@ -68,7 +73,7 @@ class BarangController extends Controller
             'harga' => $harga,
             'stok' => $request->stok,
             'diskon' => $diskon,
-            'harga_diskon' => $hargaDiskon,
+            'kategori_id' => $request->kategori_id,
         ]);
 
         return redirect()->route('barang.index')

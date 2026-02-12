@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\BarangController;
+use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\UserController;
 
@@ -54,6 +55,8 @@ Route::middleware(['auth', 'role:operator'])->group(function () {
         return 'Halaman operator ';
     });
 });
+
+Route::resource('kategori', KategoriController::class);
 
 // ✅ BARANG - untuk admin dan superadmin
 Route::middleware(['auth', 'role:admin,superadmin'])->group(function () {
