@@ -4,21 +4,51 @@
             <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
                 Manajemen User
             </h2>
-            <a href="{{ route('users.create') }}" 
-               class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-md hover:shadow-lg font-medium">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                </svg>
-                Tambah User
-            </a>
+            <div class="flex items-center gap-3">
+                {{-- Badge Pending Approval --}}
+                @if($pendingOperators > 0)
+                <a href="{{ route('users.pending') }}" 
+                   class="relative inline-flex items-center gap-2 px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-all duration-200 shadow-md hover:shadow-lg font-medium">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    Pending Approval
+                    <span class="absolute -top-2 -right-2 flex items-center justify-center w-6 h-6 text-xs font-bold text-yellow-600 bg-white rounded-full border-2 border-yellow-500">
+                        {{ $pendingOperators }}
+                    </span>
+                </a>
+                @endif
+
+                <a href="{{ route('users.create') }}" 
+                   class="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-200 shadow-md hover:shadow-lg font-medium">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Tambah User
+                </a>
+            </div>
         </div>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            @if(session('success'))
+                <div class="mb-6 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4">
+                    <div class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div>
+                            <h3 class="font-semibold text-green-800 dark:text-green-400">Berhasil!</h3>
+                            <p class="text-sm text-green-700 dark:text-green-400">{{ session('success') }}</p>
+                        </div>
+                    </div>
+                </div>
+            @endif
             
             <!-- Statistics Summary -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
                 <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
                     <div class="flex items-center justify-between">
                         <div>
@@ -66,6 +96,31 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- ✅ CARD PENDING APPROVAL --}}
+                <div class="bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl p-6 shadow-lg text-white">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-yellow-100 text-sm">Pending Approval</p>
+                            <h3 class="text-3xl font-bold mt-1">
+                                {{ $pendingOperators }}
+                            </h3>
+                            @if($pendingOperators > 0)
+                            <a href="{{ route('users.pending') }}" class="inline-flex items-center gap-1 text-sm text-white hover:text-yellow-100 mt-2 underline">
+                                Lihat Detail
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </a>
+                            @endif
+                        </div>
+                        <div class="w-12 h-12 rounded-lg bg-white/20 flex items-center justify-center">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Table Card -->
@@ -99,6 +154,9 @@
                                 </th>
                                 <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                     Role
+                                </th>
+                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
+                                    Status
                                 </th>
                                 <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                                     Aksi
@@ -155,6 +213,24 @@
                                         </span>
                                     @endif
                                 </td>
+                                {{-- ✅ KOLOM STATUS BARU --}}
+                                <td class="px-6 py-4">
+                                    @if($user->is_approved)
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Approved
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Pending
+                                        </span>
+                                    @endif
+                                </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center justify-center gap-2">
                                         <a href="{{ route('users.edit', $user) }}" 
@@ -190,7 +266,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="4" class="px-6 py-12 text-center">
+                                <td colspan="5" class="px-6 py-12 text-center">
                                     <div class="flex flex-col items-center justify-center">
                                         <svg class="w-16 h-16 text-gray-300 dark:text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
