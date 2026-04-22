@@ -2,43 +2,49 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Barang;
-use App\Models\Transaksi;
+use App\Models\Buku;
+use App\Models\Peminjaman;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-public function index()
-{
-    $user = auth()->user();
-    
-    if (in_array($user->role, ['admin', 'superadmin'])) {
-        // Data untuk Admin & Superadmin
-        $totalBarang = Barang::count();
-        $totalTransaksi = Transaksi::count();
-        $totalOmzet = Transaksi::sum('total_harga');
-        
-        return view('dashboard', compact('totalBarang', 'totalTransaksi', 'totalOmzet'));
-        
-    } elseif ($user->role === 'operator') {
-        // Data untuk Operator (hanya transaksi mereka sendiri)
-        $transaksiHariIni = Transaksi::where('user_id', $user->id)
-            ->whereDate('created_at', today())
-            ->count();
-            
-        $transaksiBulanIni = Transaksi::where('user_id', $user->id)
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->count();
-            
-        $omzetHariIni = Transaksi::where('user_id', $user->id)
-            ->whereDate('created_at', today())
-            ->sum('total_harga');
-        
-        return view('dashboard', compact('transaksiHariIni', 'transaksiBulanIni', 'omzetHariIni'));
+    public function index()
+    {
+        $user = Auth::user();
+
+        if (in_array($user->role, ['admin', 'superadmin'])) {
+            $totalBuku     = Buku::count();
+            $totalDipinjam = Peminjaman::where('status', 'dipinjam')->count();
+
+            // FIX: Ganti $pendingAnggota -> $totalAnggota
+            // Dashboard blade menggunakan {{ $totalAnggota ?? 0 }}
+            // bukan $pendingAnggota, sehingga stat selalu tampil 0
+            $totalAnggota = User::where('role', 'siswa')
+                ->where('is_verified_anggota', true) // hanya yang sudah terverifikasi
+                ->count();
+
+            // Bonus: tetap kirim pendingAnggota jika dipakai di tempat lain
+            $pendingAnggota = User::where('role', 'siswa')
+                ->where('is_verified_anggota', false)
+                ->count();
+
+            return view('dashboard', compact(
+                'totalBuku',
+                'totalDipinjam',
+                'totalAnggota',   // ← ini yang hilang sebelumnya
+                'pendingAnggota'
+            ));
+        }
+
+        if ($user->role === 'siswa') {
+            $myBorrowedBooks = Peminjaman::where('user_id', $user->id)
+                ->where('status', 'dipinjam')
+                ->count();
+
+            return view('dashboard', compact('myBorrowedBooks'));
+        }
+
+        return view('dashboard');
     }
-    
-    return view('dashboard');
-}
 }

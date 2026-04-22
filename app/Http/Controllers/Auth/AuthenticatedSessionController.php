@@ -25,23 +25,36 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-    $request->authenticate();
-    $user = Auth::user();
+        // Ini adalah proses "Validasi Login" di flowchart
+        $request->authenticate();
 
-    // ✅ CEK LANGSUNG
-    if ($user->role === 'operator' && $user->is_approved == false) {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        $request->session()->regenerate();
+
+        // ========== TAMBAHKAN KODE UNTUK SPLASH SCREEN ==========
+        // Ambil data user yang baru login
+        $user = Auth::user();
         
-        return back()->withErrors([
-            'email' => 'Akun Anda belum disetujui oleh superadmin.',
-        ]);
-    }
+        // Simpan session untuk menampilkan splash screen (gunakan session() helper)
+        session()->flash('show_splash', true);
+        
+        // Sesuaikan pesan berdasarkan role user
+        if ($user->role === 'admin') {
+            $splashMessage = "Selamat datang, {$user->name}!";
+        } elseif ($user->role === 'siswa') {
+            $splashMessage = "Halo {$user->name}, selamat membaca!";
+        } else {
+            $splashMessage = "Selamat datang, {$user->name}!";
+        }
+        
+        session()->flash('splash_message', $splashMessage);
+        
+        // Optional: Simpan juga role untuk keperluan lain
+        session()->flash('user_role', $user->role);
+        // ========== END TAMBAHAN KODE SPLASH SCREEN ==========
 
-    $request->session()->regenerate();
-    return redirect()->intended(RouteServiceProvider::HOME);
-}
+        // Berhasil divalidasi (True) -> Masuk Dashboard (Siswa atau Admin)
+        return redirect()->intended(RouteServiceProvider::HOME);
+    }
 
     /**
      * Destroy an authenticated session.

@@ -1,121 +1,126 @@
 <x-guest-layout>
-    <!-- Header -->
-    <div class="mb-8 text-center">
-        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Buat Akun Baru
-        </h2>
-        <p class="text-sm text-gray-600 dark:text-gray-400">
-            Daftar untuk memulai menggunakan aplikasi
-        </p>
+    <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+
+        <div class="w-full lg:w-1/2 space-y-8">
+            <div class="space-y-4">
+                <p class="text-[10px] font-black text-slate-900 uppercase tracking-[0.4em]">Kami disini membantu kamu</p>
+                <h1 class="text-5xl font-black text-slate-900 leading-tight tracking-tighter">
+                    Untuk bergabung di <br> <span class="italic text-slate-500">Nautica Library.</span>
+                </h1>
+                <p class="text-slate-500 text-sm font-medium leading-relaxed max-w-sm">
+                    Daftar sekarang untuk melakukan peminjaman buku di Nautica Library kapan saja, di mana saja.
+                </p>
+            </div>
+        </div>
+
+        <div class="w-full lg:w-[450px]">
+            <div class="bg-white p-8 md:p-10 rounded-[2.5rem] shadow-[0_50px_100px_-20px_rgba(15,23,42,0.08)] border border-white">
+                <form method="POST" action="{{ route('register') }}" class="space-y-5">
+                    @csrf
+
+                    <div class="space-y-4">
+
+                        {{-- Nama Lengkap --}}
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Nama Lengkap</label>
+                            <input type="text" name="name" value="{{ old('name') }}"
+                                   class="w-full px-5 py-3.5 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-slate-900/10 focus:bg-white transition-all text-sm font-bold text-slate-900 placeholder:text-slate-300
+                                          @error('name') ring-2 ring-red-400 @enderror"
+                                   placeholder="masukkan nama lengkap..." required>
+                            @error('name')
+                                <p class="text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Email --}}
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email Address</label>
+                            <input type="email" name="email" value="{{ old('email') }}"
+                                   class="w-full px-5 py-3.5 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-slate-900/10 focus:bg-white transition-all text-sm font-bold text-slate-900 placeholder:text-slate-300
+                                          @error('email') ring-2 ring-red-400 @enderror"
+                                   placeholder="masukkan alamat email..." required>
+                            @error('email')
+                                <p class="text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- NIS & WhatsApp --}}
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">NIS</label>
+                                <input type="text" name="nis" value="{{ old('nis') }}"
+                                       class="w-full px-5 py-3.5 bg-slate-50 border-none rounded-2xl text-sm font-bold placeholder:text-slate-300
+                                              @error('nis') ring-2 ring-red-400 @enderror"
+                                       placeholder="masukkan NIS..." required>
+                                @error('nis')
+                                    <p class="text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">WhatsApp</label>
+                                <input type="text" name="telepon" value="{{ old('telepon') }}"
+                                       class="w-full px-5 py-3.5 bg-slate-50 border-none rounded-2xl text-sm font-bold placeholder:text-slate-300
+                                              @error('telepon') ring-2 ring-red-400 @enderror"
+                                       placeholder="masukkan nomor WhatsApp..." required>
+                                @error('telepon')
+                                    <p class="text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        {{-- Alamat (field yang sebelumnya tidak ada) --}}
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Alamat Lengkap</label>
+                            <textarea name="alamat" rows="3"
+                                      class="w-full px-5 py-3.5 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-slate-900/10 focus:bg-white transition-all text-sm font-bold text-slate-900 placeholder:text-slate-300 resize-none
+                                             @error('alamat') ring-2 ring-red-400 @enderror"
+                                      placeholder="Jl. Contoh No. 123, Kota...">{{ old('alamat') }}</textarea>
+                            @error('alamat')
+                                <p class="text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        {{-- Password & Konfirmasi --}}
+                        <div class="grid grid-cols-2 gap-4 pt-2">
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Password</label>
+                                <input type="password" name="password"
+                                       class="w-full px-5 py-3.5 bg-slate-50 border-none rounded-2xl text-sm font-bold placeholder:text-slate-300
+                                              @error('password') ring-2 ring-red-400 @enderror"
+                                       placeholder="Password" required>
+                                @error('password')
+                                    <p class="text-xs font-bold text-red-500 ml-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Konfirmasi Password</label>
+                                <input type="password" name="password_confirmation"
+                                       class="w-full px-5 py-3.5 bg-slate-50 border-none rounded-2xl text-sm font-bold placeholder:text-slate-300"
+                                       placeholder="Konfirmasi Password" required>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {{-- Submit --}}
+                    <div class="pt-4">
+                        <button type="submit" class="group w-full flex items-center justify-between p-1.5 bg-slate-900 rounded-full hover:bg-slate-800 transition-all duration-500 shadow-xl shadow-slate-200">
+                            <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-slate-900 group-hover:rotate-45 transition-transform duration-500">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <span class="text-white font-black text-[11px] uppercase tracking-[0.2em] pr-8">Get Started</span>
+                        </button>
+                    </div>
+
+                    <p class="text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest pt-2">
+                        Sudah punya akun?
+                        <a href="{{ route('login') }}" class="text-slate-900 font-black underline underline-offset-4 ml-1">Login</a>
+                    </p>
+
+                </form>
+            </div>
+        </div>
     </div>
-
-    <form method="POST" action="{{ route('register') }}" class="space-y-5">
-        @csrf
-
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Nama Lengkap')" class="text-gray-700 dark:text-gray-300 font-medium" />
-            <div class="relative mt-2">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                </div>
-                <x-text-input id="name" 
-                              class="block w-full pl-10 pr-4 py-3 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-                              type="text" 
-                              name="name" 
-                              :value="old('name')" 
-                              required 
-                              autofocus 
-                              autocomplete="name" />
-            </div>
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-        </div>
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" class="text-gray-700 dark:text-gray-300 font-medium" />
-            <div class="relative mt-2">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                </div>
-                <x-text-input id="email" 
-                              class="block w-full pl-10 pr-4 py-3 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-                              type="email" 
-                              name="email" 
-                              :value="old('email')" 
-                              placeholder="contoh@email.com"
-                              required 
-                              autocomplete="username" />
-            </div>
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div>
-            <x-input-label for="password" :value="__('Password')" class="text-gray-700 dark:text-gray-300 font-medium" />
-            <div class="relative mt-2">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                </div>
-                <x-text-input id="password" 
-                              class="block w-full pl-10 pr-4 py-3 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                              type="password"
-                              name="password"
-                              placeholder="Minimal 8 karakter"
-                              required 
-                              autocomplete="new-password" />
-            </div>
-            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Password minimal 8 karakter</p>
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div>
-            <x-input-label for="password_confirmation" :value="__('Konfirmasi Password')" class="text-gray-700 dark:text-gray-300 font-medium" />
-            <div class="relative mt-2">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                </div>
-                <x-text-input id="password_confirmation" 
-                              class="block w-full pl-10 pr-4 py-3 border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                              type="password"
-                              name="password_confirmation" 
-                              placeholder="Ulangi password"
-                              required 
-                              autocomplete="new-password" />
-            </div>
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <!-- Submit Button -->
-        <div class="pt-2">
-            <button type="submit" 
-                    class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 shadow-md hover:shadow-lg font-medium">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                </svg>
-                {{ __('Daftar Sekarang') }}
-            </button>
-        </div>
-
-        <!-- Login Link -->
-        <div class="text-center pt-4 border-t border-gray-200 dark:border-gray-700">
-            <p class="text-sm text-gray-600 dark:text-gray-400">
-                Sudah punya akun?
-                <a class="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 transition-colors" 
-                   href="{{ route('login') }}">
-                    Masuk disini
-                </a>
-            </p>
-        </div>
-    </form>
-
 </x-guest-layout>
